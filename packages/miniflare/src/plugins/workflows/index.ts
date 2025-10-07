@@ -38,9 +38,17 @@ export const WORKFLOWS_PLUGIN: Plugin<
 		return Object.entries(options.workflows ?? {}).map(
 			([bindingName, workflow]) => ({
 				name: bindingName,
-				service: {
-					name: `${WORKFLOWS_PLUGIN_NAME}:${workflow.name}`,
-					entrypoint: "WorkflowBinding",
+				wrapped: {
+					moduleName: `cloudflare-internal:workflows-api`,
+					innerBindings: [
+						{
+							name: "fetcher",
+							service: {
+								name: `${WORKFLOWS_PLUGIN_NAME}:${workflow.name}`,
+							},
+
+						},
+					],
 				},
 			})
 		);
